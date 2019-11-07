@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
   </head>
   <b-container fluid id="app">
-    <navbar />
+    <navbar v-if="$route.path != '/login' && $route.path != '/signup'" />
     <router-view />
   </b-container>
 </html>
