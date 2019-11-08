@@ -31,7 +31,7 @@
 </template>
 
 <script>
-import Axios from "axios";
+import { GetUser, UpdateUser } from "../services/userService";
 export default {
   name: "Profile",
   data() {
@@ -44,47 +44,33 @@ export default {
     };
   },
   methods: {
-    submit(evt) {
+    async submit(evt) {
       evt.preventDefault();
-      Axios.put(`${process.env.VUE_APP_API_URL}/users/${this.user.id}`, {
+      let newUser = {
+        id: this.user.id,
         username: this.modifiedUsername,
         email: this.modifiedEmail,
         password: this.user.password,
         zipCode: this.modifiedZipCode
-      })
+      };
+      await UpdateUser(newUser)
         .then(() => {
-          //eslint-disable-next-line
-          Axios.get(`${process.env.VUE_APP_API_URL}/users/${this.user.id}`)
+          GetUser(this.user.id)
             .then(resp => {
               this.$session.set("user", resp.data);
               this.initProperties();
             })
-            .catch(err => {
-              if (err.response) {
-                if (err.response.data.errors) {
-                  this.errors = err.response.data.errors;
-                } else {
-                  this.errors.push(err.response.data.error);
-                }
-              } else {
-                this.errors.push(err);
-              }
+            .catch(errors => {
+              this.errors = errors;
             });
         })
-        .catch(err => {
-          if (err.response) {
-            if (err.response.data.errors) {
-              this.errors = err.response.data.errors;
-            } else {
-              this.errors.push(err.response.data.error);
-            }
-          } else {
-            this.errors.push(err);
-          }
+        .catch(errors => {
+          this.errors = errors;
         });
     },
     reset(evt) {
       evt.preventDefault();
+      this.errors = [];
       this.initProperties();
     },
     initProperties() {
