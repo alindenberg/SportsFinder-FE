@@ -62,13 +62,13 @@ export default {
           password: this.user.password,
           zipCode: this.user.zipCode
         })
-          .then(() => {
+          .then(result => {
+            //eslint-disable-next-line
+            console.log("post result", result);
             Axios.post(`${process.env.VUE_APP_API_URL}/login`, {
               email: this.user.email,
               password: this.user.password
             }).then(token => {
-              //eslint-disable-next-line
-              console.log("JWT ", token);
               this.$session.start();
               this.$session.set("user", this.user);
               this.$session.set("token", token);

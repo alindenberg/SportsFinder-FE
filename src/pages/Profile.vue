@@ -1,10 +1,112 @@
 <template>
-  <h1>Profile</h1>
+  <div>
+    <div v-if="errors.length > 0">
+      <span style="color: red">Errors:</span>
+      <p v-for="(error, index) in errors" :key="index" style="color: red">{{error}}</p>
+    </div>
+    <b-row class="justify-content-center">
+      <b-col md="4" sm="6">
+        <b-form @submit="submit" @reset="reset">
+          <b-row>
+            <label>Username:</label>
+            <b-form-input v-model="modifiedUsername" required id="username-input" />
+          </b-row>
+          <b-row class="form-section">
+            <label>Email:</label>
+            <b-form-input v-model="modifiedEmail" required type="email" />
+          </b-row>
+          <b-row class="form-section">
+            <label>Zip Code:</label>
+            <b-form-input v-model="modifiedZipCode" required />
+          </b-row>
+          <b-row style="margin-top: 5%" class="justify-content-around">
+            <b-button :disabled="!changesMade" variant="primary" type="submit">Save</b-button>
+            <b-button :disabled="!changesMade" variant="link" type="reset">Reset</b-button>
+            <b-button variant="link">Change Password</b-button>
+          </b-row>
+        </b-form>
+      </b-col>
+    </b-row>
+  </div>
 </template>
 
 <script>
+import Axios from "axios";
 export default {
-  name: "Profile"
+  name: "Profile",
+  data() {
+    return {
+      user: {},
+      modifiedUsername: null,
+      modifiedEmail: null,
+      modifiedZipCode: null,
+      errors: []
+    };
+  },
+  methods: {
+    submit(evt) {
+      evt.preventDefault();
+      Axios.put(`${process.env.VUE_APP_API_URL}/users/${this.user.id}`, {
+        username: this.modifiedUsername,
+        email: this.modifiedEmail,
+        password: this.user.password,
+        zipCode: this.modifiedZipCode
+      })
+        .then(() => {
+          //eslint-disable-next-line
+          Axios.get(`${process.env.VUE_APP_API_URL}/users/${this.user.id}`)
+            .then(resp => {
+              this.$session.set("user", resp.data);
+              this.initProperties();
+            })
+            .catch(err => {
+              if (err.response) {
+                if (err.response.data.errors) {
+                  this.errors = err.response.data.errors;
+                } else {
+                  this.errors.push(err.response.data.error);
+                }
+              } else {
+                this.errors.push(err);
+              }
+            });
+        })
+        .catch(err => {
+          if (err.response) {
+            if (err.response.data.errors) {
+              this.errors = err.response.data.errors;
+            } else {
+              this.errors.push(err.response.data.error);
+            }
+          } else {
+            this.errors.push(err);
+          }
+        });
+    },
+    reset(evt) {
+      evt.preventDefault();
+      this.initProperties();
+    },
+    initProperties() {
+      this.user = this.$session.get("user");
+      this.modifiedUsername = this.user.username;
+      this.modifiedEmail = this.user.email;
+      this.modifiedZipCode = this.user.zipCode;
+    }
+  },
+  created() {
+    this.initProperties();
+    // Object.assign(this.modifiedUser, this.user);
+  },
+  computed: {
+    changesMade: function() {
+      return (
+        this.modifiedUsername != this.user.username ||
+        this.modifiedEmail != this.user.email ||
+        this.modifiedZipCode != this.user.zipCode
+      );
+    }
+  }
 };
 </script>
 
