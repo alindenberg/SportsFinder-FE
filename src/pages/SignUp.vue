@@ -6,20 +6,20 @@
       <b-form @submit="signUp">
         <b-row>
           <label>Username:</label>
-          <b-form-input v-model="username" required id="username-input" />
+          <b-form-input v-model="user.username" required id="username-input" />
         </b-row>
         <b-row class="form-section">
           <label>Email:</label>
-          <b-form-input v-model="email" required type="email" />
+          <b-form-input v-model="user.email" required type="email" />
         </b-row>
         <b-row class="form-section">
           <label>Zip Code:</label>
           <small>We only use zip code to locate nearby events. Nothing else.</small>
-          <b-form-input v-model="zipCode" required />
+          <b-form-input v-model="user.zipCode" required />
         </b-row>
         <b-row class="form-section">
           <label>Password:</label>
-          <b-form-input v-model="password" required type="password" />
+          <b-form-input v-model="user.password" required type="password" />
         </b-row>
         <b-row class="form-section">
           <label>Confirm Password:</label>
@@ -38,10 +38,12 @@ export default {
   data() {
     return {
       error: null,
-      username: null,
-      email: null,
-      zipCode: null,
-      password: null,
+      user: {
+        username: null,
+        email: null,
+        zipCode: null,
+        password: null
+      },
       confirmPassword: null
     };
   },
@@ -49,21 +51,29 @@ export default {
     signUp(evt) {
       evt.preventDefault();
       this.error = null;
-      if (this.password != this.confirmPassword) {
+      if (this.user.password != this.confirmPassword) {
         this.error = "Passwords do not match.";
-      } else if (this.password.length < 8) {
+      } else if (this.user.password.length < 8) {
         this.errors = "Password must be at least 8 characters.";
       } else {
         Axios.post(`${process.env.VUE_APP_API_URL}/users`, {
-          username: this.username,
-          email: this.email,
-          password: this.password,
-          zipCode: this.zipCode
+          username: this.user.username,
+          email: this.user.email,
+          password: this.user.password,
+          zipCode: this.user.zipCode
         })
-          .then(userId => {
-            //eslint-disable-next-line
-            console.log("Created user with id ", userId);
-            this.$router.push("/");
+          .then(() => {
+            Axios.post(`${process.env.VUE_APP_API_URL}/login`, {
+              email: this.user.email,
+              password: this.user.password
+            }).then(token => {
+              //eslint-disable-next-line
+              console.log("JWT ", token);
+              this.$session.start();
+              this.$session.set("user", this.user);
+              this.$session.set("token", token);
+              this.$router.push("/");
+            });
           })
           .catch(err => {
             this.error = err.response ? err.response.data.errors[0] : err;

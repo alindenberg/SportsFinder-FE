@@ -1,5 +1,7 @@
 import Vue from 'vue'
+import VueSession from 'vue-session'
 import VueRouter from 'vue-router'
+// import Axios from 'axios'
 // Bootstrap
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -24,12 +26,25 @@ const routes = [
 const router = new VueRouter({
   mode: 'history',
   routes,
-
 })
+
+// Axios.interceptors.response.use(undefined, function (err) {
+//   if (err.response != undefined && err.response.status === 401) {
+//     // if you ever get an unauthorized, redirect user to login
+//     router.push('/login')
+//   }
+// });
+
 Vue.use(VueRouter)
+Vue.use(VueSession)
 Vue.use(BootstrapVue)
 
 new Vue({
   router,
-  render: h => h(App)
+  render: h => h(App),
+  mounted() {
+    if (!this.$session.exists()) {
+      router.push('/login')
+    }
+  }
 }).$mount('#app')
