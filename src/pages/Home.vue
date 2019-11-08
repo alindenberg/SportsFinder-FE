@@ -1,12 +1,12 @@
 <template>
-  <div>
-    <find-events />
-    <event-list />
+  <div class="flex">
+    <!-- <find-events /> -->
+    <event-list :zipCode="user.zipCode" />
   </div>
 </template>
 
 <script>
-import FindEvents from "../components/FindEvents";
+// import FindEvents from "../components/FindEvents";
 import EventList from "../components/EventList";
 export default {
   name: "Home",
@@ -16,7 +16,7 @@ export default {
     };
   },
   components: {
-    "find-events": FindEvents,
+    // "find-events": FindEvents,
     "event-list": EventList
   },
   created() {
