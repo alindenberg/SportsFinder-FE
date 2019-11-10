@@ -5,7 +5,11 @@
         <u>
           <h3>Events near {{zipCode}}</h3>
         </u>
-        <b-button class="element" variant="primary">Create Event</b-button>
+        <b-button
+          class="element"
+          variant="primary"
+          v-on:click="$router.push('/create-event') "
+        >Create Event</b-button>
       </b-row>
       <event class="element" v-for="(event, index) in events" :key="index" :event="event" />
     </b-col>
@@ -46,9 +50,7 @@ export default {
     getEventList() {
       Axios.get(`${process.env.VUE_APP_API_URL}/events?zipCode=${this.zipCode}`)
         .then(result => {
-          for (let i = 0; i < 10; i++) {
-            this.events.push(result.data[0]);
-          }
+          this.events = result.data;
         })
         .catch(() => {
           this.error = "Error fetching events in this area.";

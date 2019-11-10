@@ -55,8 +55,6 @@ export default {
             });
         })
         .catch(errors => {
-          //eslint-disable-next-line
-          console.log("Login errors ", errors);
           this.errors = errors;
         });
     }
