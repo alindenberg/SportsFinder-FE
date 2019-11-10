@@ -1,7 +1,7 @@
 <template>
   <b-col style="margin-top: 30px" class="d-flex flex-column align-items-center">
     <h1>Login</h1>
-    <h6 v-if="error" class="error">Error: {{error}}</h6>
+    <errors :errors="errors" />
     <b-col class="col-12" sm="6">
       <b-form @submit="submit">
         <b-row>
@@ -21,46 +21,44 @@
   </b-col>
 </template>
 <script>
-import Axios from "axios";
 import jwt from "jsonwebtoken";
+import Errors from "../components/Errors";
+import { Login, GetUser } from "../services/userService";
 export default {
   name: "Login",
+  components: {
+    errors: Errors
+  },
   data() {
     return {
       email: "",
       password: "",
-      error: ""
+      errors: []
     };
   },
   methods: {
     submit(evt) {
       evt.preventDefault();
-      this.error = null;
-      Axios.post(`${process.env.VUE_APP_API_URL}/login`, {
-        email: this.email,
-        password: this.password
-      }).then(res => {
-        let token = null;
-        let userId = null;
-        try {
-          token = res.data.token;
-          userId = jwt.decode(token).id;
-        } catch (err) {
-          this.error = "Error logging in";
-        }
-        Axios.get(`${process.env.VUE_APP_API_URL}/users/${userId}`)
-          .then(userResponse => {
-            this.$session.start();
-            this.$session.set("user", userResponse.data);
-            this.$session.set("token", token);
-            this.$router.push("/");
-          })
-          .catch(err => {
-            this.error = err.response
-              ? err.response.data.error
-              : "Error fetching user.";
-          });
-      });
+      this.errors = [];
+      Login(this.email, this.password)
+        .then(token => {
+          let userId = jwt.decode(token).id;
+          GetUser(userId)
+            .then(user => {
+              this.$session.start();
+              this.$session.set("user", user);
+              this.$session.set("token", token);
+              this.$router.push("/");
+            })
+            .catch(errors => {
+              this.errors = errors;
+            });
+        })
+        .catch(errors => {
+          //eslint-disable-next-line
+          console.log("Login errors ", errors);
+          this.errors = errors;
+        });
     }
   }
 };

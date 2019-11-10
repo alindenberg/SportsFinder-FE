@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div v-if="errors.length > 0">
-      <span style="color: red">Errors:</span>
-      <p v-for="(error, index) in errors" :key="index" style="color: red">{{error}}</p>
-    </div>
+    <errors :errors="errors" />
     <b-row class="justify-content-center">
       <b-col md="4" sm="6">
         <b-form @submit="submit" @reset="reset">
@@ -31,9 +28,13 @@
 </template>
 
 <script>
+import Errors from "../components/Errors";
 import { GetUser, UpdateUser } from "../services/userService";
 export default {
   name: "Profile",
+  components: {
+    errors: Errors
+  },
   data() {
     return {
       user: {},

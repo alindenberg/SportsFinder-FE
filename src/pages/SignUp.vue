@@ -1,7 +1,7 @@
 <template>
   <b-col style="margin-top: 30px" class="d-flex flex-column align-items-center">
     <h1>Sign Up</h1>
-    <h6 v-if="error" class="error">Error: {{error}}</h6>
+    <errors :errors="errors" />
     <b-col class="col-12" lg="4" sm="6">
       <b-form @submit="signUp">
         <b-row>
@@ -33,8 +33,12 @@
 
 <script>
 import Axios from "axios";
+import Errors from "../components/Errors";
 export default {
   name: "SignUp",
+  components: {
+    errors: Errors
+  },
   data() {
     return {
       error: null,
