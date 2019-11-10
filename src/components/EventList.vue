@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import Axios from "axios";
 import Event from "./Event";
+import { GetEvents } from "../services/eventService";
 export default {
   name: "EventList",
   components: {
@@ -48,13 +48,9 @@ export default {
   },
   methods: {
     getEventList() {
-      Axios.get(`${process.env.VUE_APP_API_URL}/events?zipCode=${this.zipCode}`)
-        .then(result => {
-          this.events = result.data;
-        })
-        .catch(() => {
-          this.error = "Error fetching events in this area.";
-        });
+      GetEvents(this.zipCode).then(events => {
+        this.events = events;
+      });
     }
   }
 };
