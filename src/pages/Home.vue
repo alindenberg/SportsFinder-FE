@@ -1,7 +1,7 @@
 <template>
   <div class="flex">
     <!-- <find-events /> -->
-    <event-list :zipCode="user.zipCode" />
+    <event-list :zipCode="String(user.zipCode)" />
   </div>
 </template>
 

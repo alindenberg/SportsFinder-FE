@@ -1,17 +1,15 @@
 <template>
-  <div>
-    <b-card :title="event.name" :sub-title="getDisplayTime(event.time)">
-      <b-card-text>{{event.description}}</b-card-text>
-      <b-button variant="link" v-on:click="rsvpToEvent" v-if="canAttend">RSVP</b-button>
-      <b-button variant="link" v-on:click="cancelRsvp" v-if="isAttending">Cancel RSVP</b-button>
-    </b-card>
-  </div>
+  <b-card :title="event.name" :sub-title="getDisplayTime(event.time)">
+    <b-button variant="link" v-on:click="$router.push(`/events/${event.id}`)">View</b-button>
+    <b-button variant="link" v-on:click="rsvpToEvent" v-if="canAttend">RSVP</b-button>
+    <b-button variant="link" v-on:click="cancelRsvp" v-if="isAttending">Cancel RSVP</b-button>
+  </b-card>
 </template>
 
 <script>
 const moment = require("moment-timezone");
 export default {
-  name: "Event",
+  name: "EventCard",
   data() {
     return {
       userId: null,
@@ -57,10 +55,17 @@ export default {
           break;
         }
       }
+    },
+    cardClicked() {
+      //eslint-disable-next-line
+      console.log("Event card clicked");
     }
   }
 };
 </script>
 
-<style>
+<style scoped>
+.eventCard {
+  cursor: pointer;
+}
 </style>

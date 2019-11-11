@@ -13,7 +13,8 @@
       </b-row>
       <event class="element" v-for="(event, index) in events" :key="index" :event="event" />
     </b-col>
-    <div v-if="events.length == 0">
+    <div v-if="events.length == 0 || errors.length > 0">
+      <errors :errors="errors" />
       <h4>No events found in {{zipCode}} zip code</h4>
       <b-button variant="primary">Create Event</b-button>
     </div>
@@ -21,16 +22,19 @@
 </template>
 
 <script>
-import Event from "./Event";
+import EventCard from "./EventCard";
+import Errors from "../components/Errors";
 import { GetEvents } from "../services/eventService";
 export default {
   name: "EventList",
   components: {
-    Event
+    Event: EventCard,
+    errors: Errors
   },
   data() {
     return {
-      events: []
+      events: [],
+      errors: []
     };
   },
   props: {
@@ -48,9 +52,13 @@ export default {
   },
   methods: {
     getEventList() {
-      GetEvents(this.zipCode).then(events => {
-        this.events = events;
-      });
+      GetEvents(this.zipCode)
+        .then(events => {
+          this.events = events;
+        })
+        .catch(errors => {
+          this.errors = errors;
+        });
     }
   }
 };

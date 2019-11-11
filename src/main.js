@@ -12,6 +12,7 @@ import Home from './pages/Home'
 import SignUp from './pages/SignUp'
 import Login from './pages/Login'
 import Profile from './pages/Profile'
+import ViewEvent from './pages/ViewEvent'
 import CreateEvent from './pages/CreateEvent'
 
 Vue.config.productionTip = false
@@ -21,7 +22,8 @@ const routes = [
   { path: '/signup', component: SignUp },
   { path: '/login', component: Login },
   { path: '/profile', component: Profile },
-  { path: '/create-event', component: CreateEvent },
+  { path: '/events/:eventId', component: ViewEvent },
+  { path: '/create-event', component: CreateEvent }
 ]
 const router = new VueRouter({
   mode: 'history',
