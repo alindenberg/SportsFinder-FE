@@ -12,8 +12,16 @@ export function GetEvent(id) {
   });
 }
 
-export function GetEvents(zipCode) {
+export function GetZipCodeEvents(zipCode) {
   return Axios.get(`${process.env.VUE_APP_API_URL}/events?zipCode=${zipCode}`)
+    .then(result => result.data)
+    .catch((err) => {
+      handle_error(err)
+    });
+}
+
+export function GetUserEvents(userId) {
+  return Axios.get(`${process.env.VUE_APP_API_URL}/events?userId=${userId}`)
     .then(result => result.data)
     .catch((err) => {
       handle_error(err)

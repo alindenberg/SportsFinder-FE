@@ -3,6 +3,20 @@
     <errors :errors="errors" />
     <messages :messages="messages" />
     <!-- <find-events /> -->
+    <b-row class="justify-content-around align-items-center">
+      <b-dropdown :text="eventView">
+        <b-dropdown-item
+          :active="eventView == 'Events near me'"
+          v-on:click="getZipCodeEvents"
+        >Events near me</b-dropdown-item>
+        <b-dropdown-item :active="eventView == 'My events'" v-on:click="getUserEvents">My events</b-dropdown-item>
+      </b-dropdown>
+      <b-button
+        class="element"
+        variant="primary"
+        v-on:click="$router.push('/create-event') "
+      >Create Event</b-button>
+    </b-row>
     <eventList :events="events" />
   </div>
 </template>
@@ -12,7 +26,7 @@
 import Errors from "../components/Errors";
 import Messages from "../components/Messages";
 import EventList from "../components/EventList";
-import { GetEvents } from "../services/eventService";
+import { GetZipCodeEvents, GetUserEvents } from "../services/eventService";
 export default {
   name: "Home",
   components: {
@@ -25,7 +39,8 @@ export default {
       errors: [],
       messages: [],
       events: [],
-      user: null
+      user: null,
+      eventView: "Events near me"
     };
   },
   created() {
@@ -34,12 +49,20 @@ export default {
   },
   methods: {
     getUserEvents() {
-      // GetUserEvents(this.user.id)
-    },
-    getZipCodeEvents(zipCode) {
-      GetEvents(zipCode)
+      GetUserEvents(this.user.id)
         .then(events => {
           this.events = events;
+          this.eventView = "My events";
+        })
+        .catch(errors => {
+          this.errors = errors;
+        });
+    },
+    getZipCodeEvents() {
+      GetZipCodeEvents(this.user.zipCode)
+        .then(events => {
+          this.events = events;
+          this.eventView = "Events near me";
         })
         .catch(errors => {
           this.errors = errors;
