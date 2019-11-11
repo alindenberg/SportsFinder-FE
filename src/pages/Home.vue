@@ -4,7 +4,7 @@
     <messages :messages="messages" />
     <!-- <find-events /> -->
     <b-row class="justify-content-around align-items-center">
-      <b-dropdown :text="eventView">
+      <b-dropdown :text="eventView" variant="link" size="lg">
         <b-dropdown-item
           :active="eventView == 'Events near me'"
           v-on:click="getZipCodeEvents"
