@@ -1,19 +1,31 @@
 <template>
-  <b-card :title="event.name" :sub-title="getDisplayTime(event.time)">
-    <b-button variant="link" v-on:click="$router.push(`/events/${event.id}`)">View</b-button>
-    <b-button variant="link" v-on:click="rsvpToEvent" v-if="canAttend">RSVP</b-button>
-    <b-button variant="link" v-on:click="cancelRsvp" v-if="isAttending">Cancel RSVP</b-button>
-  </b-card>
+  <div>
+    <errors :errors="errors" />
+    <b-card :title="event.name" :sub-title="getDisplayTime(event.time)">
+      <b-button
+        variant="link"
+        v-on:click="$router.push({name: 'ViewEvent', params: {event: event}})"
+      >View</b-button>
+      <b-button variant="link" v-on:click="rsvpToEvent" v-if="canAttend">RSVP</b-button>
+      <b-button variant="link" v-on:click="cancelRsvp" v-if="isAttending">Cancel RSVP</b-button>
+    </b-card>
+  </div>
 </template>
 
 <script>
 const moment = require("moment-timezone");
+import Errors from "../components/Errors";
+import { PostAttendees } from "../services/eventService";
 export default {
   name: "EventCard",
+  components: {
+    errors: Errors
+  },
   data() {
     return {
       userId: null,
-      isAttending: false
+      isAttending: false,
+      errors: []
     };
   },
   props: {
@@ -45,13 +57,25 @@ export default {
     },
     rsvpToEvent() {
       this.event.attendees.push(this.userId);
-      this.isAttending = true;
+      PostAttendees(this.event.id, this.event.attendees)
+        .then(() => {
+          this.isAttending = true;
+        })
+        .catch(errors => {
+          this.errors = errors;
+        });
     },
     cancelRsvp() {
       for (let i = 0; i < this.event.attendees.length; i++) {
         if (this.event.attendees == this.userId) {
           this.event.attendees.splice(i, 1);
-          this.isAttending = false;
+          PostAttendees(this.event.id, this.event.attendees)
+            .then(() => {
+              this.isAttending = false;
+            })
+            .catch(errors => {
+              this.errors = errors;
+            });
           break;
         }
       }

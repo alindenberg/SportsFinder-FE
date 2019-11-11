@@ -22,7 +22,7 @@ const routes = [
   { path: '/signup', component: SignUp },
   { path: '/login', component: Login },
   { path: '/profile', component: Profile },
-  { path: '/events/:eventId', component: ViewEvent },
+  { path: '/event', name: 'ViewEvent', component: ViewEvent, props: true },
   { path: '/create-event', component: CreateEvent }
 ]
 const router = new VueRouter({

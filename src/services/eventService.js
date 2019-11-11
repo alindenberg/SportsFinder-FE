@@ -20,6 +20,14 @@ export function GetEvents(zipCode) {
     });
 }
 
+export function PostAttendees(eventId, attendees) {
+  return Axios.post(`${process.env.VUE_APP_API_URL}/events/${eventId}/attendees`, {
+    attendees: attendees
+  }).catch(err => {
+    handle_error(err)
+  })
+}
+
 function handle_error(err) {
   let errors = []
   if (err.response) {
