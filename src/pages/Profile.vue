@@ -1,6 +1,7 @@
 <template>
   <div>
     <errors :errors="errors" />
+    <messages :messages="messages" />
     <b-row class="justify-content-center">
       <b-col md="4" sm="6">
         <b-form @submit="submit" @reset="reset">
@@ -29,11 +30,13 @@
 
 <script>
 import Errors from "../components/Errors";
+import Messages from "../components/Messages";
 import { GetUser, UpdateUser } from "../services/userService";
 export default {
   name: "Profile",
   components: {
-    errors: Errors
+    errors: Errors,
+    messages: Messages
   },
   data() {
     return {
@@ -41,11 +44,12 @@ export default {
       modifiedUsername: null,
       modifiedEmail: null,
       modifiedZipCode: null,
-      errors: []
+      errors: [],
+      messages: []
     };
   },
   methods: {
-    async submit(evt) {
+    submit(evt) {
       evt.preventDefault();
       let newUser = {
         id: this.user.id,
@@ -54,12 +58,13 @@ export default {
         password: this.user.password,
         zipCode: this.modifiedZipCode
       };
-      await UpdateUser(newUser)
+      UpdateUser(newUser)
         .then(() => {
           GetUser(this.user.id)
-            .then(resp => {
-              this.$session.set("user", resp.data);
+            .then(user => {
+              this.$session.set("user", user);
               this.initProperties();
+              this.messages = ["Successfully updated user!"];
             })
             .catch(errors => {
               this.errors = errors;
@@ -83,7 +88,6 @@ export default {
   },
   created() {
     this.initProperties();
-    // Object.assign(this.modifiedUser, this.user);
   },
   computed: {
     changesMade: function() {

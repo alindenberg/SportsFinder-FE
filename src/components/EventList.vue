@@ -1,5 +1,5 @@
 <template>
-  <b-row style="height: 80vh" class="justify-content-center align-items-center">
+  <b-row class="justify-content-center align-items-center">
     <b-col class="col-12" sm="8" v-if="events.length > 0">
       <b-row class="justify-content-around align-items-center">
         <u>
@@ -24,42 +24,17 @@
 <script>
 import EventCard from "./EventCard";
 import Errors from "../components/Errors";
-import { GetEvents } from "../services/eventService";
 export default {
   name: "EventList",
   components: {
     Event: EventCard,
     errors: Errors
   },
-  data() {
-    return {
-      events: [],
-      errors: []
-    };
-  },
   props: {
-    zipCode: String
+    events: Array
   },
   watch: {
-    zipCode: function() {
-      this.getEventList();
-    }
-  },
-  created() {
-    if (this.zipCode) {
-      this.getEventList();
-    }
-  },
-  methods: {
-    getEventList() {
-      GetEvents(this.zipCode)
-        .then(events => {
-          this.events = events;
-        })
-        .catch(errors => {
-          this.errors = errors;
-        });
-    }
+    events: function() {}
   }
 };
 </script>
