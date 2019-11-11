@@ -1,16 +1,17 @@
 <template>
   <div>
-    <h1>Create Event</h1>
+    <h1>Edit Event</h1>
     <errors :errors="errors" />
-    <b-row class="justify-content-center">
+    <messages :messages="messages" />
+    <b-row v-if="event" class="justify-content-center">
       <b-col class="col-12" sm="6" md="6">
-        <b-form @submit="submit">
+        <b-form @submit="submit" @reset="reset">
           <b-row>
             <b-col sm="3">
               <label for="nameInput">Event name:</label>
             </b-col>
             <b-col sm="9">
-              <b-form-input v-model="event.name" required id="nameInput" />
+              <b-form-input v-model="modifiedEvent.name" required id="nameInput" />
             </b-col>
           </b-row>
           <b-row class="form-section">
@@ -18,7 +19,7 @@
               <label for="descriptionInput">Description:</label>
             </b-col>
             <b-col sm="9">
-              <b-form-input v-model="event.description" id="descriptionInput" />
+              <b-form-input v-model="modifiedEvent.description" id="descriptionInput" />
             </b-col>
           </b-row>
           <b-row class="form-section">
@@ -44,7 +45,7 @@
             <b-col sm="9">
               <b-form-input
                 id="participantInput"
-                v-model="event.desiredNumOfParticipants"
+                v-model="modifiedEvent.desiredNumOfParticipants"
                 :type="'number'"
                 required
               ></b-form-input>
@@ -61,7 +62,7 @@
               <label for="locationNameInput">Name:</label>
             </b-col>
             <b-col sm="9">
-              <b-form-input id="locationNameInput" v-model="event.location.name" required></b-form-input>
+              <b-form-input id="locationNameInput" v-model="modifiedEvent.location.name" required></b-form-input>
             </b-col>
           </b-row>
           <b-row class="form-section align-items-center">
@@ -69,7 +70,7 @@
               <label for="streetInput">Street:</label>
             </b-col>
             <b-col sm="9">
-              <b-form-input id="streetInput" v-model="event.location.street" required></b-form-input>
+              <b-form-input id="streetInput" v-model="modifiedEvent.location.street" required></b-form-input>
             </b-col>
           </b-row>
           <b-row class="form-section align-items-center">
@@ -77,7 +78,7 @@
               <label for="cityInput">City:</label>
             </b-col>
             <b-col sm="9">
-              <b-form-input id="cityInput" v-model="event.location.city" required></b-form-input>
+              <b-form-input id="cityInput" v-model="modifiedEvent.location.city" required></b-form-input>
             </b-col>
           </b-row>
           <b-row class="form-section align-items-center">
@@ -85,7 +86,7 @@
               <label for="stateInput">State:</label>
             </b-col>
             <b-col sm="9">
-              <b-form-input id="stateInput" v-model="event.location.state" required></b-form-input>
+              <b-form-input id="stateInput" v-model="modifiedEvent.location.state" required></b-form-input>
             </b-col>
           </b-row>
           <b-row class="form-section align-items-center">
@@ -93,11 +94,14 @@
               <label for="zipCodeInput">Zip Code:</label>
             </b-col>
             <b-col sm="9">
-              <b-form-input id="zipCodeInput" v-model="event.location.zipCode" required></b-form-input>
+              <b-form-input id="zipCodeInput" v-model="modifiedEvent.location.zipCode" required></b-form-input>
             </b-col>
           </b-row>
-          <b-button style="margin-top: 5%" variant="primary" type="submit">Submit</b-button>
-          <b-button style="margin-top: 5%" variant="link" v-on:click="$router.push('/')">Cancel</b-button>
+          <b-row class="form-section justify-content-around">
+            <b-button variant="primary" type="submit">Submit</b-button>
+            <b-button variant="link" type="reset">Reset</b-button>
+            <b-button variant="danger" v-on:click="deleteEvent">Delete Event</b-button>
+          </b-row>
         </b-form>
       </b-col>
     </b-row>
@@ -105,51 +109,69 @@
 </template>
 
 <script>
+var moment = require("moment-timezone");
 import Errors from "../components/Errors";
-import { CreateEvent } from "../services/eventService";
+import Messages from "../components/Messages";
+import { UpdateEvent, DeleteEvent } from "../services/eventService";
 export default {
-  name: "CreateEvent",
+  name: "EditEvent",
   components: {
+    messages: Messages,
     errors: Errors
   },
   data() {
     return {
       errors: [],
+      messages: [],
+      originalEvent: null,
+      modifiedEvent: null,
       date: null,
-      time: null,
-      event: {
-        name: null,
-        description: "",
-        datetime: null,
-        location: {
-          name: null,
-          zipCode: null,
-          street: null,
-          city: null,
-          state: null
-        },
-        attendees: [],
-        creatorId: null
-      }
+      time: null
     };
+  },
+  props: {
+    event: Object
   },
   methods: {
     submit(evt) {
       evt.preventDefault();
-      this.event.time = `${this.date}T${this.time}:00Z`;
-      CreateEvent(this.event)
+      this.modifiedEvent.time = `${this.date}T${this.time}:00Z`;
+      UpdateEvent(this.modifiedEvent)
         .then(() => {
-          this.$router.push("/");
+          this.originalEvent = this.modifiedEvent;
+          this.messages = ["Successfully updated event"];
+          this.initProperties();
         })
         .catch(errors => {
           this.errors = errors;
         });
+    },
+    reset(evt) {
+      evt.preventDefault();
+      this.initProperties();
+    },
+    deleteEvent() {
+      DeleteEvent(this.originalEvent.id).then(() => {
+        this.$router.push("/");
+      });
+    },
+    initProperties() {
+      // copy event to modifiable object so we can restore state if needed
+      this.modifiedEvent = JSON.parse(JSON.stringify(this.originalEvent));
+      const timeComponents = moment(this.modifiedEvent.time)
+        .format("YYYY-MM-DDThh:mm")
+        .split("T");
+      this.date = timeComponents[0];
+      this.time = timeComponents[1];
     }
   },
   created() {
-    const user = this.$session.get("user");
-    this.event.creatorId = user.id;
-    this.event.attendees.push(user.id);
+    if (!this.event) {
+      this.$router.push("/");
+    } else {
+      this.originalEvent = JSON.parse(JSON.stringify(this.event));
+      this.initProperties();
+    }
   }
 };
 </script>

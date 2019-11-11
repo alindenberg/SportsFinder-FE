@@ -36,6 +36,18 @@ export function PostAttendees(eventId, attendees) {
   })
 }
 
+export function UpdateEvent(event) {
+  return Axios.put(`${process.env.VUE_APP_API_URL}/events/${event.id}`, event).catch(err => {
+    handle_error(err)
+  })
+}
+
+export function DeleteEvent(eventId) {
+  return Axios.delete(`${process.env.VUE_APP_API_URL}/events/${eventId}`).catch(err => {
+    handle_error(err)
+  })
+}
+
 function handle_error(err) {
   let errors = []
   if (err.response) {

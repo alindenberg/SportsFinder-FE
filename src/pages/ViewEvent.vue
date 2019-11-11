@@ -2,15 +2,20 @@
   <div>
     <errors :errors="errors" />
     <div v-if="event">
-      <h1>{{event.name}}</h1>
-      <h5>{{getDisplayTime(event.time)}}</h5>
+      <h1>
+        {{event.name}}
+        <v-icon
+          large="true"
+          v-on:click="$router.push({name: 'EditEvent', params: {event: event}})"
+          style="cursor: pointer"
+          name="edit"
+        />
+      </h1>
       <div>{{event.description}}</div>
       <b-row style="margin-top: 2%">
         <b-col sm="6">
-          <u>
-            <h4>Location</h4>
-          </u>
           <h5>{{event.location.name}}</h5>
+          <h5>{{getDisplayTime(event.time)}}</h5>
           <h5>{{getDisplayAddress(event.location)}}</h5>
         </b-col>
         <b-col sm="6">

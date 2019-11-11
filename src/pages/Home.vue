@@ -40,12 +40,12 @@ export default {
       messages: [],
       events: [],
       user: null,
-      eventView: "Events near me"
+      eventView: "My events"
     };
   },
   created() {
     this.user = this.$session.get("user");
-    this.getZipCodeEvents();
+    this.getUserEvents();
   },
   methods: {
     getUserEvents() {

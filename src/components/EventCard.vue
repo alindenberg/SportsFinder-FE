@@ -8,6 +8,11 @@
       >View</b-button>
       <b-button variant="link" v-on:click="rsvpToEvent" v-if="canAttend">RSVP</b-button>
       <b-button variant="link" v-on:click="cancelRsvp" v-if="isAttending">Cancel RSVP</b-button>
+      <b-button
+        variant="link"
+        v-on:click="$router.push({name: 'EditEvent', params: {event: event}})"
+        v-if="event.creatorId == userId"
+      >Edit Event</b-button>
     </b-card>
   </div>
 </template>
@@ -79,10 +84,6 @@ export default {
           break;
         }
       }
-    },
-    cardClicked() {
-      //eslint-disable-next-line
-      console.log("Event card clicked");
     }
   }
 };

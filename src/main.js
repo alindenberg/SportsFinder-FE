@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import VueSession from 'vue-session'
 import VueRouter from 'vue-router'
+// Vue-awesome
+import Icon from 'vue-awesome/components/Icon'
+import 'vue-awesome/icons/edit'
 // import Axios from 'axios'
 // Bootstrap
 import BootstrapVue from 'bootstrap-vue'
@@ -13,6 +16,7 @@ import SignUp from './pages/SignUp'
 import Login from './pages/Login'
 import Profile from './pages/Profile'
 import ViewEvent from './pages/ViewEvent'
+import EditEvent from './pages/EditEvent'
 import CreateEvent from './pages/CreateEvent'
 
 Vue.config.productionTip = false
@@ -23,6 +27,7 @@ const routes = [
   { path: '/login', component: Login },
   { path: '/profile', component: Profile },
   { path: '/event', name: 'ViewEvent', component: ViewEvent, props: true },
+  { path: '/edit-event', name: 'EditEvent', component: EditEvent, props: true },
   { path: '/create-event', component: CreateEvent }
 ]
 const router = new VueRouter({
@@ -40,6 +45,7 @@ const router = new VueRouter({
 Vue.use(VueRouter)
 Vue.use(VueSession)
 Vue.use(BootstrapVue)
+Vue.component('v-icon', Icon)
 
 new Vue({
   router,
