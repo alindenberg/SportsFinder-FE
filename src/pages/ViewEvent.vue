@@ -5,6 +5,7 @@
       <h1>
         {{event.name}}
         <v-icon
+          v-if="event.creatorId == userId"
           large="true"
           v-on:click="$router.push({name: 'EditEvent', params: {event: event}})"
           style="cursor: pointer"

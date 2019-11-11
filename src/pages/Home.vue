@@ -5,11 +5,11 @@
     <!-- <find-events /> -->
     <b-row class="justify-content-around align-items-center">
       <b-dropdown :text="eventView" variant="link" size="lg">
+        <b-dropdown-item :active="eventView == 'My events'" v-on:click="getUserEvents">My events</b-dropdown-item>
         <b-dropdown-item
           :active="eventView == 'Events near me'"
           v-on:click="getZipCodeEvents"
         >Events near me</b-dropdown-item>
-        <b-dropdown-item :active="eventView == 'My events'" v-on:click="getUserEvents">My events</b-dropdown-item>
       </b-dropdown>
       <b-button
         class="element"

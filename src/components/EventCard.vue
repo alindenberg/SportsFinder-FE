@@ -37,16 +37,14 @@ export default {
     event: Object
   },
   watch: {
-    event: function() {}
+    event: function() {
+      //eslint-disable-next-line
+      console.log("EVENT CARD UPDATED");
+      this.initProperties();
+    }
   },
   created() {
-    this.userId = this.$session.get("user").id;
-    for (let i = 0; i < this.event.attendees.length; i++) {
-      if (this.event.attendees == this.userId) {
-        this.isAttending = true;
-        break;
-      }
-    }
+    this.initProperties();
   },
   computed: {
     canAttend: function() {
@@ -84,6 +82,17 @@ export default {
           break;
         }
       }
+    },
+    initProperties() {
+      let isAttending = false;
+      this.userId = this.$session.get("user").id;
+      for (let i = 0; i < this.event.attendees.length; i++) {
+        if (this.event.attendees[i] == this.userId) {
+          isAttending = true;
+          break;
+        }
+      }
+      this.isAttending = isAttending;
     }
   }
 };
