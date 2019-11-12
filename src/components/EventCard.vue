@@ -38,8 +38,6 @@ export default {
   },
   watch: {
     event: function() {
-      //eslint-disable-next-line
-      console.log("EVENT CARD UPDATED");
       this.initProperties();
     }
   },
