@@ -13,7 +13,11 @@ export function GetEvent(id) {
 }
 
 export function GetZipCodeEvents(zipCode) {
-  return Axios.get(`${process.env.VUE_APP_API_URL}/events?zipCode=${zipCode}`)
+  let queryString = `${process.env.VUE_APP_API_URL}/events`
+  if (zipCode) {
+    queryString = queryString.concat(`?zipCode=${zipCode}`)
+  }
+  return Axios.get(queryString)
     .then(result => result.data)
     .catch((err) => {
       handle_error(err)

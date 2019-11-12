@@ -67,9 +67,10 @@ export default {
   created() {
     if (!this.event) {
       this.$router.push("/");
+    } else {
+      this.userId = this.$session.get("user").id;
+      this.getAttendeeMap(this.event.attendees);
     }
-    this.userId = this.$session.get("user").id;
-    this.getAttendeeMap(this.event.attendees);
   },
   methods: {
     getAttendeeMap(attendees) {

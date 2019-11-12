@@ -65,51 +65,6 @@
               />
             </b-col>
           </b-row>
-          <!-- <b-row class="form-section justify-content-start">
-            <h4>
-              <u>Location</u>
-            </h4>
-          </b-row>
-          <b-row class="form-section align-items-center">
-            <b-col sm="3">
-              <label for="locationNameInput">Name:</label>
-            </b-col>
-            <b-col sm="9">
-              <b-form-input id="locationNameInput" v-model="event.location.name" required></b-form-input>
-            </b-col>
-          </b-row>
-          <b-row class="form-section align-items-center">
-            <b-col sm="3">
-              <label for="streetInput">Street:</label>
-            </b-col>
-            <b-col sm="9">
-              <b-form-input id="streetInput" v-model="event.location.street" required></b-form-input>
-            </b-col>
-          </b-row>
-          <b-row class="form-section align-items-center">
-            <b-col sm="3">
-              <label for="cityInput">City:</label>
-            </b-col>
-            <b-col sm="9">
-              <b-form-input id="cityInput" v-model="event.location.city" required></b-form-input>
-            </b-col>
-          </b-row>
-          <b-row class="form-section align-items-center">
-            <b-col sm="3">
-              <label for="stateInput">State:</label>
-            </b-col>
-            <b-col sm="9">
-              <b-form-input id="stateInput" v-model="event.location.state" required></b-form-input>
-            </b-col>
-          </b-row>
-          <b-row class="form-section align-items-center">
-            <b-col sm="3">
-              <label for="zipCodeInput">Zip Code:</label>
-            </b-col>
-            <b-col sm="9">
-              <b-form-input id="zipCodeInput" v-model="event.location.zipCode" required></b-form-input>
-            </b-col>
-          </b-row>-->
           <b-button style="margin-top: 5%" variant="primary" type="submit">Submit</b-button>
           <b-button style="margin-top: 5%" variant="link" v-on:click="$router.push('/')">Cancel</b-button>
         </b-form>
@@ -159,8 +114,6 @@ export default {
         });
     },
     onPlaceChanged(address, place) {
-      //eslint-disable-next-line
-      // console.log("Photo url ", place.photos[0].getUrl());
       this.location = {
         name: place.name,
         streetAddress: `${address.street_number} ${address.route}`,
