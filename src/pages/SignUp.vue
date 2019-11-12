@@ -67,8 +67,6 @@ export default {
           zipCode: this.user.zipCode
         })
           .then(result => {
-            //eslint-disable-next-line
-            console.log("post result", result);
             Axios.post(`${process.env.VUE_APP_API_URL}/login`, {
               email: this.user.email,
               password: this.user.password

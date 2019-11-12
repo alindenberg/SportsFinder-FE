@@ -124,7 +124,7 @@ export default {
         addressString = addressString.concat(`${location.streetAddress}, `);
       }
       if (location.city) {
-        addressString = addressString.concat(`${location.city}, `);
+        addressString = addressString.concat(`${location.city} `);
       }
       if (location.state) {
         addressString = addressString.concat(`${location.state}, `);

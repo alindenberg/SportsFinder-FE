@@ -5,7 +5,6 @@
     </b-col>
     <div v-if="events.length == 0">
       <h4>No events found.</h4>
-      <b-button variant="primary">Create Event</b-button>
     </div>
   </b-row>
 </template>

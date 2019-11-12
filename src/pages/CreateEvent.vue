@@ -51,7 +51,21 @@
             </b-col>
           </b-row>
           <!-- Location Input -->
-          <b-row class="form-section justify-content-start">
+          <b-row class="form-section align-items-center">
+            <b-col sm="3">
+              <label for="locationInput">Location:</label>
+            </b-col>
+            <b-col sm="9">
+              <google-autocomplete
+                class="autocomplete"
+                types="establishment"
+                id="autocomplete"
+                placeholder="Enter a spot"
+                v-on:placechanged="onPlaceChanged"
+              />
+            </b-col>
+          </b-row>
+          <!-- <b-row class="form-section justify-content-start">
             <h4>
               <u>Location</u>
             </h4>
@@ -95,7 +109,7 @@
             <b-col sm="9">
               <b-form-input id="zipCodeInput" v-model="event.location.zipCode" required></b-form-input>
             </b-col>
-          </b-row>
+          </b-row>-->
           <b-button style="margin-top: 5%" variant="primary" type="submit">Submit</b-button>
           <b-button style="margin-top: 5%" variant="link" v-on:click="$router.push('/')">Cancel</b-button>
         </b-form>
@@ -107,27 +121,22 @@
 <script>
 import Errors from "../components/Errors";
 import { CreateEvent } from "../services/eventService";
+import VueGoogleAutocomplete from "vue-google-autocomplete";
 export default {
   name: "CreateEvent",
   components: {
-    errors: Errors
+    errors: Errors,
+    "google-autocomplete": VueGoogleAutocomplete
   },
   data() {
     return {
       errors: [],
       date: null,
       time: null,
+      location: null,
       event: {
         name: null,
         description: "",
-        datetime: null,
-        location: {
-          name: null,
-          zipCode: null,
-          street: null,
-          city: null,
-          state: null
-        },
         attendees: [],
         creatorId: null
       }
@@ -136,6 +145,10 @@ export default {
   methods: {
     submit(evt) {
       evt.preventDefault();
+      if (!this.location) {
+        this.errors = ["Must supply a location where event will be held."];
+      }
+      this.event.location = this.location;
       this.event.time = `${this.date}T${this.time}:00Z`;
       CreateEvent(this.event)
         .then(() => {
@@ -144,6 +157,17 @@ export default {
         .catch(errors => {
           this.errors = errors;
         });
+    },
+    onPlaceChanged(address, place) {
+      //eslint-disable-next-line
+      // console.log("Photo url ", place.photos[0].getUrl());
+      this.location = {
+        name: place.name,
+        streetAddress: `${address.street_number} ${address.route}`,
+        city: address.locality,
+        zipCode: address.postal_code,
+        state: address.administrative_area_level_1
+      };
     }
   },
   created() {
