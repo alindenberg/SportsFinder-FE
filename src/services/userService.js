@@ -16,6 +16,16 @@ export function Login(email, password) {
   })
 }
 
+export function Signup(username, email, password, zipCode) {
+  return Axios.post(`${process.env.VUE_APP_API_URL}/users`, {
+    username: username,
+    email: email,
+    password: password,
+    zipCode: zipCode
+  }).catch(err => {
+    handle_error(err)
+  })
+}
 export function UpdateUser(user) {
   return Axios.put(`${process.env.VUE_APP_API_URL}/users/${user.id}`, user).catch(err => {
     handle_error(err)

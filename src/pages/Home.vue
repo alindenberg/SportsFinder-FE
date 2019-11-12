@@ -2,7 +2,6 @@
   <div class="flex">
     <errors :errors="errors" />
     <messages :messages="messages" />
-    <!-- <find-events /> -->
     <b-row class="justify-content-center align-items-center">
       <b-col sm="2">
         <b-dropdown style="margin-right: 2%:" :text="eventView" variant="link" size="lg">
@@ -13,22 +12,21 @@
           >Events near me</b-dropdown-item>
         </b-dropdown>
       </b-col>
-      <b-col sm="4" v-if="eventView === 'Events near me'">
-        <b-row>
-          <!-- <b-col sm="9"> -->
-          <b-input type="text" style="max-width: 80%;" v-model="zipCode" />
-          <!-- </b-col> -->
-          <!-- <b-col sm="3" class="d-flex-inline flex-column align-items-start"> -->
-          <b-button variant="link" v-on:click="getZipCodeEvents">Search</b-button>
-          <!-- </b-col> -->
-        </b-row>
-      </b-col>
       <b-col sm="2">
         <b-button
           style="margin-left: 2%"
           variant="primary"
           v-on:click="$router.push('/create-event') "
         >Create Event</b-button>
+      </b-col>
+    </b-row>
+    <b-row class="justify-content-center align-items-center" v-if="eventView == 'Events near me'">
+      <b-col sm="5">
+        <label>Zip Code:</label>
+        <b-input type="text" :model="zipCode" />
+      </b-col>
+      <b-col sm="2">
+        <b-button variant="link">Search</b-button>
       </b-col>
     </b-row>
     <eventList :events="events" />

@@ -6,20 +6,20 @@
       <b-form @submit="signUp">
         <b-row>
           <label>Username:</label>
-          <b-form-input v-model="user.username" required id="username-input" />
+          <b-form-input v-model="username" required id="username-input" />
         </b-row>
         <b-row class="form-section">
           <label>Email:</label>
-          <b-form-input v-model="user.email" required type="email" />
+          <b-form-input v-model="email" required type="email" />
         </b-row>
         <b-row class="form-section">
           <label>Zip Code:</label>
           <small>We only use zip code to locate nearby events. Nothing else.</small>
-          <b-form-input v-model="user.zipCode" required />
+          <b-form-input v-model="zipCode" required />
         </b-row>
         <b-row class="form-section">
           <label>Password:</label>
-          <b-form-input v-model="user.password" required type="password" />
+          <b-form-input v-model="password" required type="password" />
         </b-row>
         <b-row class="form-section">
           <label>Confirm Password:</label>
@@ -32,8 +32,9 @@
 </template>
 
 <script>
-import Axios from "axios";
+import jwt from "jsonwebtoken";
 import Errors from "../components/Errors";
+import { Signup, Login, GetUser } from "../services/userService";
 export default {
   name: "SignUp",
   components: {
@@ -42,12 +43,10 @@ export default {
   data() {
     return {
       error: null,
-      user: {
-        username: null,
-        email: null,
-        zipCode: null,
-        password: null
-      },
+      username: null,
+      email: null,
+      zipCode: null,
+      password: null,
       confirmPassword: null
     };
   },
@@ -55,30 +54,29 @@ export default {
     signUp(evt) {
       evt.preventDefault();
       this.error = null;
-      if (this.user.password != this.confirmPassword) {
+      if (this.password != this.confirmPassword) {
         this.error = "Passwords do not match.";
-      } else if (this.user.password.length < 8) {
+      } else if (this.password.length < 8) {
         this.errors = "Password must be at least 8 characters.";
       } else {
-        Axios.post(`${process.env.VUE_APP_API_URL}/users`, {
-          username: this.user.username,
-          email: this.user.email,
-          password: this.user.password,
-          zipCode: this.user.zipCode
-        })
-          .then(result => {
-            Axios.post(`${process.env.VUE_APP_API_URL}/login`, {
-              email: this.user.email,
-              password: this.user.password
-            }).then(token => {
-              this.$session.start();
-              this.$session.set("user", this.user);
-              this.$session.set("token", token);
-              this.$router.push("/");
+        Signup(this.username, this.email, this.password, this.zipCode)
+          .then(() => {
+            Login(this.email, this.password).then(token => {
+              let userId = jwt.decode(token).id;
+              GetUser(userId)
+                .then(user => {
+                  this.$session.start();
+                  this.$session.set("user", user);
+                  this.$session.set("token", token);
+                  this.$router.push("/");
+                })
+                .catch(errors => {
+                  this.errors = errors;
+                });
             });
           })
-          .catch(err => {
-            this.error = err.response ? err.response.data.errors[0] : err;
+          .catch(errors => {
+            this.errors = errors;
           });
       }
     }
