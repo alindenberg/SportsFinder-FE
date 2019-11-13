@@ -7,15 +7,11 @@
         <b-form @submit="submit" @reset="reset">
           <b-row>
             <label>Username:</label>
-            <b-form-input v-model="modifiedUsername" required id="username-input" />
+            <b-form-input v-model="modifiedUser.username" required id="username-input" />
           </b-row>
           <b-row class="form-section">
             <label>Email:</label>
-            <b-form-input v-model="modifiedEmail" required type="email" />
-          </b-row>
-          <b-row class="form-section">
-            <label>Zip Code:</label>
-            <b-form-input v-model="modifiedZipCode" required />
+            <b-form-input v-model="modifiedUser.email" required type="email" />
           </b-row>
           <b-row style="margin-top: 5%" class="justify-content-around">
             <b-button :disabled="!changesMade" variant="primary" type="submit">Save</b-button>
@@ -40,10 +36,8 @@ export default {
   },
   data() {
     return {
-      user: {},
-      modifiedUsername: null,
-      modifiedEmail: null,
-      modifiedZipCode: null,
+      user: null,
+      modifiedUser: null,
       errors: [],
       messages: []
     };
@@ -51,14 +45,7 @@ export default {
   methods: {
     submit(evt) {
       evt.preventDefault();
-      let newUser = {
-        id: this.user.id,
-        username: this.modifiedUsername,
-        email: this.modifiedEmail,
-        password: this.user.password,
-        zipCode: this.modifiedZipCode
-      };
-      UpdateUser(newUser)
+      UpdateUser(this.modifiedUser)
         .then(() => {
           GetUser(this.user.id)
             .then(user => {
@@ -81,9 +68,7 @@ export default {
     },
     initProperties() {
       this.user = this.$session.get("user");
-      this.modifiedUsername = this.user.username;
-      this.modifiedEmail = this.user.email;
-      this.modifiedZipCode = this.user.zipCode;
+      this.modifiedUser = JSON.parse(JSON.stringify(this.user));
     }
   },
   created() {
@@ -91,11 +76,7 @@ export default {
   },
   computed: {
     changesMade: function() {
-      return (
-        this.modifiedUsername != this.user.username ||
-        this.modifiedEmail != this.user.email ||
-        this.modifiedZipCode != this.user.zipCode
-      );
+      return JSON.stringify(this.user) != JSON.stringify(this.modifiedUser);
     }
   }
 };

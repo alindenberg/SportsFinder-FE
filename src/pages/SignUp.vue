@@ -13,11 +13,6 @@
           <b-form-input v-model="email" required type="email" />
         </b-row>
         <b-row class="form-section">
-          <label>Zip Code:</label>
-          <small>We only use zip code to locate nearby events. Nothing else.</small>
-          <b-form-input v-model="zipCode" required />
-        </b-row>
-        <b-row class="form-section">
           <label>Password:</label>
           <b-form-input v-model="password" required type="password" />
         </b-row>
@@ -45,7 +40,6 @@ export default {
       error: null,
       username: null,
       email: null,
-      zipCode: null,
       password: null,
       confirmPassword: null
     };
@@ -59,7 +53,7 @@ export default {
       } else if (this.password.length < 8) {
         this.errors = "Password must be at least 8 characters.";
       } else {
-        Signup(this.username, this.email, this.password, this.zipCode)
+        Signup(this.username, this.email, this.password)
           .then(() => {
             Login(this.email, this.password).then(token => {
               let userId = jwt.decode(token).id;

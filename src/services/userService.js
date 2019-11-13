@@ -16,12 +16,11 @@ export function Login(email, password) {
   })
 }
 
-export function Signup(username, email, password, zipCode) {
+export function Signup(username, email, password) {
   return Axios.post(`${process.env.VUE_APP_API_URL}/users`, {
     username: username,
     email: email,
-    password: password,
-    zipCode: zipCode
+    password: password
   }).catch(err => {
     handle_error(err)
   })
