@@ -119,7 +119,9 @@ export default {
       }
     },
     getDisplayTime(time) {
-      return moment(time).format("dddd, MMMM Do YYYY, h:mm a");
+      return moment(time)
+        .tz(moment.tz.guess())
+        .format("dddd, MMMM Do YYYY, h:mm a");
     },
     getDisplayAddress(location) {
       let addressString = "";

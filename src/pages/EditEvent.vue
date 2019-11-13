@@ -27,7 +27,7 @@
               <label for="dateinput">Date:</label>
             </b-col>
             <b-col sm="9">
-              <b-form-input id="dateInput" v-model="date" :type="'date'" required></b-form-input>
+              <b-form-input id="dateInput" v-model="modifiedDate" :type="'date'" required></b-form-input>
             </b-col>
           </b-row>
           <b-row class="form-section align-items-center">
@@ -35,7 +35,7 @@
               <label for="timeInput">Time:</label>
             </b-col>
             <b-col sm="9">
-              <b-form-input id="timeInput" v-model="time" :type="'time'" required></b-form-input>
+              <b-form-input id="timeInput" v-model="modifiedTime" :type="'time'" required></b-form-input>
             </b-col>
           </b-row>
           <b-row class="form-section align-items-center">
@@ -51,52 +51,6 @@
               ></b-form-input>
             </b-col>
           </b-row>
-          <!-- Location Input -->
-          <!-- <b-row class="form-section justify-content-start">
-            <h4>
-              <u>Location</u>
-            </h4>
-          </b-row>
-          <b-row class="form-section align-items-center">
-            <b-col sm="3">
-              <label for="locationNameInput">Name:</label>
-            </b-col>
-            <b-col sm="9">
-              <b-form-input id="locationNameInput" v-model="modifiedEvent.location.name" required></b-form-input>
-            </b-col>
-          </b-row>
-          <b-row class="form-section align-items-center">
-            <b-col sm="3">
-              <label for="streetInput">Street:</label>
-            </b-col>
-            <b-col sm="9">
-              <b-form-input id="streetInput" v-model="modifiedEvent.location.street" required></b-form-input>
-            </b-col>
-          </b-row>
-          <b-row class="form-section align-items-center">
-            <b-col sm="3">
-              <label for="cityInput">City:</label>
-            </b-col>
-            <b-col sm="9">
-              <b-form-input id="cityInput" v-model="modifiedEvent.location.city" required></b-form-input>
-            </b-col>
-          </b-row>
-          <b-row class="form-section align-items-center">
-            <b-col sm="3">
-              <label for="stateInput">State:</label>
-            </b-col>
-            <b-col sm="9">
-              <b-form-input id="stateInput" v-model="modifiedEvent.location.state" required></b-form-input>
-            </b-col>
-          </b-row>
-          <b-row class="form-section align-items-center">
-            <b-col sm="3">
-              <label for="zipCodeInput">Zip Code:</label>
-            </b-col>
-            <b-col sm="9">
-              <b-form-input id="zipCodeInput" v-model="modifiedEvent.location.zipCode" required></b-form-input>
-            </b-col>
-          </b-row>-->
           <b-row class="form-section align-items-center">
             <b-col sm="3">
               <label for="locationInput">Location:</label>
@@ -141,8 +95,10 @@ export default {
       messages: [],
       originalEvent: null,
       modifiedEvent: null,
-      date: null,
-      time: null
+      originalDate: null,
+      originalTime: null,
+      modifiedDate: null,
+      modifiedTime: null
     };
   },
   props: {
@@ -150,15 +106,23 @@ export default {
   },
   computed: {
     changesMade: function() {
-      return !(
-        JSON.stringify(this.originalEvent) == JSON.stringify(this.modifiedEvent)
+      return (
+        JSON.stringify(this.originalEvent) !=
+          JSON.stringify(this.modifiedEvent) ||
+        this.originalTime != this.modifiedTime ||
+        this.originalDate != this.modifiedDate
       );
     }
   },
   methods: {
     submit(evt) {
       evt.preventDefault();
-      this.modifiedEvent.time = `${this.date}T${this.time}:00Z`;
+      this.modifiedEvent.time = moment(
+        `${this.modifiedDate}T${this.modifiedTime}`
+      )
+        .tz(moment.tz.guess())
+        .utc()
+        .format();
       UpdateEvent(this.modifiedEvent)
         .then(() => {
           this.originalEvent = JSON.parse(JSON.stringify(this.modifiedEvent));
@@ -182,10 +146,13 @@ export default {
       // copy event to original & modifiable object so we can restore state if needed
       this.modifiedEvent = JSON.parse(JSON.stringify(this.originalEvent));
       const timeComponents = moment(this.modifiedEvent.time)
+        .tz(moment.tz.guess())
         .format("YYYY-MM-DDThh:mm")
         .split("T");
-      this.date = timeComponents[0];
-      this.time = timeComponents[1];
+      this.originalDate = timeComponents[0];
+      this.modifiedDate = timeComponents[0];
+      this.originalTime = timeComponents[1];
+      this.modifiedTime = timeComponents[1];
     },
     getFormattedAddress(location) {
       let addressString = "";

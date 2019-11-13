@@ -5,7 +5,7 @@
     <b-row class="justify-content-center">
       <b-col class="col-12" sm="6" md="6">
         <b-form @submit="submit">
-          <b-row>
+          <b-row class="align-items-center">
             <b-col sm="3">
               <label for="nameInput">Event name:</label>
             </b-col>
@@ -13,7 +13,7 @@
               <b-form-input v-model="event.name" required id="nameInput" />
             </b-col>
           </b-row>
-          <b-row class="form-section">
+          <b-row class="form-section align-items-cente">
             <b-col sm="3">
               <label for="descriptionInput">Description:</label>
             </b-col>
@@ -21,7 +21,7 @@
               <b-form-input v-model="event.description" id="descriptionInput" />
             </b-col>
           </b-row>
-          <b-row class="form-section">
+          <b-row class="form-section align-items-center">
             <b-col sm="3">
               <label for="dateinput">Date:</label>
             </b-col>
@@ -74,6 +74,7 @@
 </template>
 
 <script>
+var moment = require("moment-timezone");
 import Errors from "../components/Errors";
 import { CreateEvent } from "../services/eventService";
 import VueGoogleAutocomplete from "vue-google-autocomplete";
@@ -104,7 +105,10 @@ export default {
         this.errors = ["Must supply a location where event will be held."];
       }
       this.event.location = this.location;
-      this.event.time = `${this.date}T${this.time}:00Z`;
+      this.event.time = moment(`${this.date}T${this.time}`)
+        .tz(moment.tz.guess())
+        .utc()
+        .format();
       CreateEvent(this.event)
         .then(() => {
           this.$router.push("/");
