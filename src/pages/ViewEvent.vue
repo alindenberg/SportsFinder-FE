@@ -12,17 +12,19 @@
           name="edit"
         />
       </h1>
-      <div>{{event.description}}</div>
-      <b-row style="margin-top: 2%">
-        <b-col sm="6">
-          <h5>{{event.location.name}}</h5>
-          <h5>{{getDisplayTime(event.time)}}</h5>
-          <h5>{{getDisplayAddress(event.location)}}</h5>
+      <h5>{{event.description}}</h5>
+      <b-row style="margin-top: 2%" class="justify-content-center">
+        <b-col sm="8">
+          <p>{{event.location.name}}</p>
+          <p>{{getDisplayAddress(event.location)}}</p>
+          <p>{{getDisplayTime(event.time)}}</p>
         </b-col>
-        <b-col sm="6">
-          <u>
-            <h4>Attendees</h4>
-          </u>
+        <b-col sm="8">
+          <div style="margin-bottom: 2%">
+            <h5>
+              <u>Attendees</u>
+            </h5>
+          </div>
           <p v-for="(username, userId) in attendeeMap" :key="userId">{{username}}</p>
           <h6
             v-if="event.attendees.length == event.desiredNumOfParticipants"
@@ -32,7 +34,7 @@
             v-if="!attendeeMap[userId] && event.attendees.length < event.desiredNumOfParticipants"
             v-on:click="rsvp"
           >RSVP</b-button>
-          <b-button variant="primary" v-if="attendeeMap[userId]" v-on:click="cancelRSVP">Cancel RSVP</b-button>
+          <b-button variant="danger" v-if="attendeeMap[userId]" v-on:click="cancelRSVP">Cancel RSVP</b-button>
         </b-col>
       </b-row>
     </div>

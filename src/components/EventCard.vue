@@ -1,7 +1,7 @@
 <template>
   <div>
     <errors :errors="errors" />
-    <b-card :title="event.name" :sub-title="getDisplayTime(event.time)">
+    <b-card class="eventCard" :title="event.name" :sub-title="getDisplayTime(event.time)">
       <b-button
         variant="link"
         v-on:click="$router.push({name: 'ViewEvent', params: {event: event}})"
@@ -98,6 +98,7 @@ export default {
 
 <style scoped>
 .eventCard {
-  cursor: pointer;
+  padding: 5px;
+  box-shadow: 5px 5px #d9d9d9;
 }
 </style>

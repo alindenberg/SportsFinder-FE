@@ -5,8 +5,8 @@
     <b-row>
       <b-col class="col-6 d-flex flex-column align-items-start">
         <b-dropdown :text="viewAllEvents ? 'All Events' : 'My Events'" variant="link" size="lg">
-          <b-dropdown-item :active="!viewAllEvents" v-on:click="getUserEvents">My events</b-dropdown-item>
           <b-dropdown-item :active="viewAllEvents" v-on:click="clearZipCode">All Events</b-dropdown-item>
+          <b-dropdown-item :active="!viewAllEvents" v-on:click="getUserEvents">My Events</b-dropdown-item>
         </b-dropdown>
       </b-col>
       <b-col class="col-6 d-flex flex-column align-items-end">

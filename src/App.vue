@@ -1,5 +1,5 @@
 <template>
-  <b-container fluid id="app">
+  <b-container style="height: 100vh" fluid id="app">
     <navbar v-if="$route.path != '/login' && $route.path != '/signup'" />
     <router-view />
   </b-container>
@@ -22,5 +22,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+}
+
+body {
+  background-color: cyan;
 }
 </style>
