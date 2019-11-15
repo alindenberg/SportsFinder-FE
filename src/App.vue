@@ -1,6 +1,6 @@
 <template>
   <b-container style="height: 100vh" fluid id="app">
-    <navbar v-if="$route.path != '/login' && $route.path != '/signup'" />
+    <navbar v-if="$route.path != '/login'" />
     <router-view />
   </b-container>
 </template>
@@ -25,6 +25,6 @@ export default {
 }
 
 body {
-  background-color: cyan;
+  background-color: #fbe7b2;
 }
 </style>

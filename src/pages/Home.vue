@@ -55,6 +55,9 @@ export default {
   },
   created() {
     this.user = this.$session.get("user");
+    if (!this.user) {
+      this.$router.push("/login");
+    }
     this.getAllEvents();
   },
   methods: {

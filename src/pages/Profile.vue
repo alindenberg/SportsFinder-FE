@@ -16,7 +16,19 @@
           <b-row style="margin-top: 5%" class="justify-content-around">
             <b-button :disabled="!changesMade" variant="primary" type="submit">Save</b-button>
             <b-button :disabled="!changesMade" variant="link" type="reset">Reset</b-button>
-            <b-button variant="link">Change Password</b-button>
+            <b-button variant="link" v-on:click="changePassword">Change Password</b-button>
+          </b-row>
+          <b-row style="margin-top: 5%" class="justify-content-around">
+            <b-button
+              variant="danger"
+              v-if="!confirmDelete"
+              v-on:click="confirmDelete = true"
+            >Delete Account</b-button>
+            <b-col v-if="confirmDelete">
+              <p>Confirm you want to delete your account? All data will be erased.</p>
+              <b-button variant="danger" v-on:click="deleteUser">Confirm Delete</b-button>
+              <b-button variant="link" v-on:click="confirmDelete = false">Cancel</b-button>
+            </b-col>
           </b-row>
         </b-form>
       </b-col>
@@ -27,17 +39,31 @@
 <script>
 import Errors from "../components/Errors";
 import Messages from "../components/Messages";
-import { GetUser, UpdateUser } from "../services/userService";
+import {
+  GetUser,
+  UpdateUser,
+  InitiatePasswordReset,
+  DeleteUser
+} from "../services/userService";
 export default {
   name: "Profile",
   components: {
     errors: Errors,
     messages: Messages
   },
+  created() {
+    this.initProperties();
+  },
+  computed: {
+    changesMade: function() {
+      return JSON.stringify(this.user) != JSON.stringify(this.modifiedUser);
+    }
+  },
   data() {
     return {
       user: null,
       modifiedUser: null,
+      confirmDelete: false,
       errors: [],
       messages: []
     };
@@ -69,14 +95,27 @@ export default {
     initProperties() {
       this.user = this.$session.get("user");
       this.modifiedUser = JSON.parse(JSON.stringify(this.user));
-    }
-  },
-  created() {
-    this.initProperties();
-  },
-  computed: {
-    changesMade: function() {
-      return JSON.stringify(this.user) != JSON.stringify(this.modifiedUser);
+    },
+    changePassword() {
+      InitiatePasswordReset(this.user.email)
+        .then(() => {
+          this.messages = [
+            "Password reset link has been sent! Check your inbox."
+          ];
+        })
+        .catch(errors => {
+          this.errors = errors;
+        });
+    },
+    deleteUser() {
+      DeleteUser(this.user.id)
+        .then(() => {
+          this.$session.destroy();
+          this.$router.push("/signup");
+        })
+        .catch(errors => {
+          this.errors = errors;
+        });
     }
   }
 };

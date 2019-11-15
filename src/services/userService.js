@@ -31,6 +31,29 @@ export function UpdateUser(user) {
   })
 }
 
+export function InitiatePasswordReset(email) {
+  return Axios.post(`${process.env.VUE_APP_API_URL}/initiatePasswordReset`, {
+    email
+  }).catch(err => {
+    handle_error(err)
+  })
+}
+export function ResetPassword(email, password, resetToken) {
+  return Axios.post(`${process.env.VUE_APP_API_URL}/password`, {
+    email: email,
+    token: resetToken,
+    password: password
+  }).catch(err => {
+    handle_error(err)
+  })
+}
+
+export function DeleteUser(userId) {
+  return Axios.delete(`${process.env.VUE_APP_API_URL}/users/${userId}`).catch((err) => {
+    handle_error(err)
+  })
+}
+
 function handle_error(err) {
   let errors = []
   if (err.response) {

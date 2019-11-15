@@ -1,5 +1,8 @@
 <template>
-  <b-col style="margin-top: 30px" class="d-flex flex-column align-items-center">
+  <b-col
+    style="min-height: 70vh"
+    class="d-flex flex-column justify-content-center align-items-center"
+  >
     <h1>Sign Up</h1>
     <errors :errors="errors" />
     <b-col class="col-12" lg="4" sm="6">
@@ -37,7 +40,7 @@ export default {
   },
   data() {
     return {
-      error: null,
+      errors: [],
       username: null,
       email: null,
       password: null,
@@ -49,9 +52,9 @@ export default {
       evt.preventDefault();
       this.error = null;
       if (this.password != this.confirmPassword) {
-        this.error = "Passwords do not match.";
+        this.errors = ["Passwords do not match."];
       } else if (this.password.length < 8) {
-        this.errors = "Password must be at least 8 characters.";
+        this.errors = ["Password must be at least 8 characters."];
       } else {
         Signup(this.username, this.email, this.password)
           .then(() => {

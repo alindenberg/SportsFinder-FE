@@ -1,6 +1,10 @@
 <template>
-  <b-col style="margin-top: 30px" class="d-flex flex-column align-items-center">
-    <h1>Login</h1>
+  <b-col
+    style="min-height: 70vh"
+    class="d-flex flex-column align-items-center justify-content-center"
+  >
+    <h1>SportsFinder Login</h1>
+    <p>Find and Create pick-up sporting events near you</p>
     <errors :errors="errors" />
     <b-col class="col-12" sm="6">
       <b-form @submit="submit">
@@ -12,8 +16,13 @@
           <label>Password:</label>
           <b-form-input v-model="password" id="passwordInput" type="password" />
         </b-row>
-        <b-row style="margin-top: 2%" class="justify-content-center">
+        <b-row style="margin-top: 2%" class="justify-content-between">
           <b-button type="submit" variant="primary">Submit</b-button>
+          <b-button
+            type="submit"
+            variant="link"
+            v-on:click="$router.push('/initiate_password_reset')"
+          >Forgot Password?</b-button>
           <b-button v-on:click="$router.push('/signup')" variant="link">Sign Up</b-button>
         </b-row>
       </b-form>

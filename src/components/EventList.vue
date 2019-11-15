@@ -4,7 +4,9 @@
       <event class="element" :event="event" />
     </b-col>
     <div v-if="events.length == 0">
-      <h4>No events found.</h4>
+      <b-row style="min-height: 60vh" class="align-items-center">
+        <h4>No events found.</h4>
+      </b-row>
     </div>
   </b-row>
 </template>

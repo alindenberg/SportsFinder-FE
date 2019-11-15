@@ -18,6 +18,8 @@ import Profile from './pages/Profile'
 import ViewEvent from './pages/ViewEvent'
 import EditEvent from './pages/EditEvent'
 import CreateEvent from './pages/CreateEvent'
+import ResetPassword from './pages/ResetPassword'
+import InitiatePasswordReset from './pages/InitiatePasswordReset'
 
 Vue.config.productionTip = false
 
@@ -28,7 +30,9 @@ const routes = [
   { path: '/profile', component: Profile },
   { path: '/event', name: 'ViewEvent', component: ViewEvent, props: true },
   { path: '/edit-event', name: 'EditEvent', component: EditEvent, props: true },
-  { path: '/create-event', component: CreateEvent }
+  { path: '/create-event', component: CreateEvent },
+  { path: '/initiate_password_reset', component: InitiatePasswordReset },
+  { path: '/password_reset', component: ResetPassword }
 ]
 const router = new VueRouter({
   mode: 'history',
@@ -50,9 +54,9 @@ Vue.component('v-icon', Icon)
 new Vue({
   router,
   render: h => h(App),
-  mounted() {
-    if (!this.$session.exists()) {
-      router.push('/login')
+  created() {
+    if (!this.$session.exists() && this.$route.path != '/password_reset' && this.$route.path != '/initiate_password_reset') {
+      this.$router.push('/login')
     }
   }
 }).$mount('#app')
