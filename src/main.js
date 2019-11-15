@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import VueSession from 'vue-session'
 import VueRouter from 'vue-router'
+import Axios from 'axios'
 // Vue-awesome
 import Icon from 'vue-awesome/components/Icon'
 import 'vue-awesome/icons/edit'
-// import Axios from 'axios'
 // Bootstrap
 import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -39,12 +39,12 @@ const router = new VueRouter({
   routes,
 })
 
-// Axios.interceptors.response.use(undefined, function (err) {
-//   if (err.response != undefined && err.response.status === 401) {
-//     // if you ever get an unauthorized, redirect user to login
-//     router.push('/login')
-//   }
-// });
+Axios.interceptors.response.use(undefined, function (err) {
+  if (err.response != undefined && err.response.status === 401) {
+    // if you ever get an unauthorized, redirect user to login
+    router.push('/login')
+  }
+});
 
 Vue.use(VueRouter)
 Vue.use(VueSession)
@@ -55,7 +55,10 @@ new Vue({
   router,
   render: h => h(App),
   created() {
-    if (!this.$session.exists() && this.$route.path != '/password_reset' && this.$route.path != '/initiate_password_reset') {
+    if (!this.$session.exists()
+      && this.$route.path != '/signup'
+      && this.$route.path != '/password_reset'
+      && this.$route.path != '/initiate_password_reset') {
       this.$router.push('/login')
     }
   }

@@ -10,6 +10,7 @@ export function GetUser(userId) {
 
 export function Login(email, password) {
   return Axios.post(`${process.env.VUE_APP_API_URL}/login`, { email: email, password: password }).then(resp => {
+    Axios.defaults.headers.common["token"] = resp.data.token;
     return resp.data.token
   }).catch(err => {
     handle_error(err)
