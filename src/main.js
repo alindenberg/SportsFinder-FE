@@ -48,7 +48,7 @@ Axios.interceptors.response.use(undefined, function (err) {
 });
 
 Vue.use(VueRouter)
-Vue.use(VueSession, { persist: true })
+Vue.use(VueSession)
 Vue.use(BootstrapVue)
 Vue.component('v-icon', Icon)
 
@@ -61,6 +61,8 @@ new Vue({
       && this.$route.path != '/password_reset'
       && this.$route.path != '/initiate_password_reset') {
       this.$router.push('/login')
+    } else {
+      Axios.defaults.headers.common['token'] = this.$session.get('token')
     }
   }
 }).$mount('#app')
