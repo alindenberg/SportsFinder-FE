@@ -48,7 +48,7 @@ Axios.interceptors.response.use(undefined, function (err) {
 });
 
 Vue.use(VueRouter)
-Vue.use(VueSession)
+Vue.use(VueSession, { persist: true })
 Vue.use(BootstrapVue)
 Vue.component('v-icon', Icon)
 
