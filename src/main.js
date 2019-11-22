@@ -26,7 +26,7 @@ Vue.config.productionTip = false
 const routes = [
   { path: '/', component: Home },
   { path: '/signup', component: SignUp },
-  { path: '/login', component: Login },
+  { path: '/login', name: 'Login', component: Login, props: true },
   { path: '/profile', component: Profile },
   { path: '/event', name: 'ViewEvent', component: ViewEvent, props: true },
   { path: '/edit_event', name: 'EditEvent', component: EditEvent, props: true },
@@ -41,8 +41,8 @@ const router = new VueRouter({
 
 Axios.interceptors.response.use(undefined, function (err) {
   if (err.response != undefined && err.response.status === 401) {
-    // if you ever get an unauthorized, redirect user to login
-    router.push('/login')
+    const errors = err.response.data ? [err.response.data.error] : []
+    router.push({ name: 'Login', params: { sentErrors: errors } })
   }
   return Promise.reject(err)
 });
