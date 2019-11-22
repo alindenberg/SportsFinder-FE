@@ -3,9 +3,9 @@
     style="min-height: 70vh"
     class="d-flex flex-column align-items-center justify-content-center"
   >
+    <errors :errors="errors" />
     <h1>SportsFinder Login</h1>
     <p>Find and Create pick-up sporting events near you</p>
-    <errors :errors="errors" />
     <b-col class="col-12" sm="6">
       <b-form @submit="submit">
         <b-row>
