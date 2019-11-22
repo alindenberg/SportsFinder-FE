@@ -10,7 +10,7 @@
         </b-dropdown>
       </b-col>
       <b-col class="col-6 d-flex flex-column align-items-end">
-        <b-button variant="primary" v-on:click="$router.push('/create-event') ">Create Event</b-button>
+        <b-button variant="primary" v-on:click="$router.push('/create_event') ">Create Event</b-button>
       </b-col>
     </b-row>
     <b-row class="justify-content-center">

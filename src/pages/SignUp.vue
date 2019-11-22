@@ -58,19 +58,23 @@ export default {
       } else {
         Signup(this.username, this.email, this.password)
           .then(() => {
-            Login(this.email, this.password).then(token => {
-              let userId = jwt.decode(token).id;
-              GetUser(userId)
-                .then(user => {
-                  this.$session.start();
-                  this.$session.set("user", user);
-                  this.$session.set("token", token);
-                  this.$router.push("/");
-                })
-                .catch(errors => {
-                  this.errors = errors;
-                });
-            });
+            Login(this.email, this.password)
+              .then(token => {
+                let userId = jwt.decode(token).id;
+                GetUser(userId)
+                  .then(user => {
+                    this.$session.start();
+                    this.$session.set("user", user);
+                    this.$session.set("token", token);
+                    this.$router.push("/");
+                  })
+                  .catch(errors => {
+                    this.errors = errors;
+                  });
+              })
+              .catch(errors => {
+                this.errors = errors;
+              });
           })
           .catch(errors => {
             this.errors = errors;
