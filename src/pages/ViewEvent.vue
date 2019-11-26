@@ -14,12 +14,15 @@
       </h1>
       <h5>{{event.description}}</h5>
       <b-row style="margin-top: 2%" class="justify-content-center">
-        <b-col sm="8">
+        <b-col sm="6">
+          <h5>
+            <u>Where</u>
+          </h5>
           <p>{{event.location.name}}</p>
           <p>{{getDisplayAddress(event.location)}}</p>
           <p>{{getDisplayTime(event.time)}}</p>
         </b-col>
-        <b-col sm="8">
+        <b-col sm="6">
           <div style="margin-bottom: 2%">
             <h5>
               <u>Attendees</u>

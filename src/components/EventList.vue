@@ -1,6 +1,6 @@
 <template>
   <b-row class="justify-content-center align-items-center">
-    <b-col class="col-10" sm="6" v-for="(event, index) in events" :key="index">
+    <b-col sm="7" v-for="(event, index) in events" :key="index">
       <event class="element" :event="event" />
     </b-col>
     <div v-if="events.length == 0">
