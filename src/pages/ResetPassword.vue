@@ -52,8 +52,6 @@ export default {
   },
   methods: {
     submit(evt) {
-      //eslint-disable-next-line
-      console.log("reset password form submitted");
       evt.preventDefault();
       if (this.password != this.confirmPassword) {
         this.error = "Passwords do not match.";
@@ -63,12 +61,12 @@ export default {
       ResetPassword(this.email, this.password, this.token)
         .then(() => {
           this.messages = [
-            "Successfully updated password! Redirecting to homepage."
+            "Successfully updated password! Redirecting to login."
           ];
           const router = this.$router;
           setTimeout(() => {
             router.push("/login");
-          }, 2000);
+          }, 1500);
         })
         .catch(errors => {
           this.errors = errors;
