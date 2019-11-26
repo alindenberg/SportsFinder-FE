@@ -8,7 +8,7 @@
         <b-form @submit="submit" @reset="reset">
           <b-row>
             <b-col sm="3">
-              <label for="nameInput">Event name:</label>
+              <label for="nameInput">Name:</label>
             </b-col>
             <b-col sm="9">
               <b-form-input v-model="modifiedEvent.name" required id="nameInput" />
@@ -145,9 +145,10 @@ export default {
     initProperties() {
       // copy event to original & modifiable object so we can restore state if needed
       this.modifiedEvent = JSON.parse(JSON.stringify(this.originalEvent));
+      //eslint-disable-next-line
       const timeComponents = moment(this.modifiedEvent.time)
         .tz(moment.tz.guess())
-        .format("YYYY-MM-DDThh:mm")
+        .format("YYYY-MM-DDTHH:mm")
         .split("T");
       this.originalDate = timeComponents[0];
       this.modifiedDate = timeComponents[0];
