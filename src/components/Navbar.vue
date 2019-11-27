@@ -1,5 +1,5 @@
 <template>
-  <b-navbar>
+  <b-navbar id="navbar">
     <b-navbar-nav style="width: 100%">
       <b-nav-item v-on:click="$router.push('/')" :disabled="$route.path == '/'">SportsFinder</b-nav-item>
     </b-navbar-nav>
@@ -8,6 +8,10 @@
       style="width: 100%;"
       align="end"
     >
+      <b-nav-item
+        :disabled="$route.path == '/create_event'"
+        v-on:click="$router.push('/create_event') "
+      >Create Event</b-nav-item>
       <b-nav-item
         v-on:click="$router.push('/profile')"
         :disabled="$route.path == '/profile'"
@@ -29,5 +33,10 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+#navbar {
+  /* width: 100vw; */
+  border-bottom: 1px solid lightgrey;
+  margin-bottom: 2%;
+}
 </style>

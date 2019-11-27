@@ -1,8 +1,10 @@
 <template>
-  <b-container style="height: 100vh" fluid id="app">
-    <navbar v-if="$route.path != '/login'" />
-    <router-view />
-  </b-container>
+  <div>
+    <navbar style="width: 100%" v-if="$route.path != '/login'" />
+    <b-container style="height: 100vh" fluid id="app">
+      <router-view />
+    </b-container>
+  </div>
 </template>
 
 <script>
