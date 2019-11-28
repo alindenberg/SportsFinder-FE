@@ -3,27 +3,25 @@
     <errors :errors="errors" />
     <messages :messages="messages" />
     <b-row class="align-items-center">
-      <b-col class="col-4 d-flex flex-column align-items-start">
+      <b-col class="col-2 d-flex flex-column align-items-start">
         <b-dropdown :text="viewAllEvents ? 'All Events' : 'My Events'" variant="link" size="lg">
           <b-dropdown-item :active="viewAllEvents" v-on:click="clearZipCode">All Events</b-dropdown-item>
           <b-dropdown-item :active="!viewAllEvents" v-on:click="getUserEvents">My Events</b-dropdown-item>
         </b-dropdown>
       </b-col>
-      <b-col class="col-4 d-flex flex-column align-items-center">
-        <div v-if="viewAllEvents">
+      <b-col class="col-8 d-flex flex-column align-items-center">
+        <b-row class="justify-content-center" v-if="viewAllEvents">
           <b-input
             style="max-width: 180px"
             type="text"
             placeholder="Search by zip code"
             v-model="zipCode"
           />
-          <b-row class="justify-content-center">
-            <b-button variant="link" v-on:click="getAllEvents">Search</b-button>
-            <b-button variant="link" v-on:click="clearZipCode">Clear</b-button>
-          </b-row>
-        </div>
+          <b-button variant="link" v-on:click="getAllEvents">Search</b-button>
+          <b-button variant="link" v-on:click="clearZipCode">Clear</b-button>
+        </b-row>
       </b-col>
-      <b-col class="col-4 d-flex flex-column align-items-end">
+      <b-col class="col-2 d-flex flex-column align-items-end">
         <div v-if="!viewAllEvents">
           <b-form-checkbox @input="pastEventsClicked" v-model="showPastEvents">Past Events</b-form-checkbox>
         </div>
